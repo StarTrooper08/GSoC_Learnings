@@ -7,7 +7,7 @@ I started learning Devops tools and was pretty much known to tools like Docker a
 
 ### Project Info
 
-The project aims to create an environment for open source contributors to easily set up and install R devel source code and let them work on bugs/issues instead of getting tangled in the setup process. This environment is great for beginners who are getting started contributing to the R community. The project uses tools like bash scripting, R lang, and Docker and uses GitHub codespace as a platform to connect all together and create an environment for contributors to contribute to the R code base.
+The project aims to create an environment for open source contributors to easily set up and install R devel source code and let them work on bugs/issues instead of getting tangled in the setup process. This environment is great for beginners who are getting started contributing to the R community. The project uses tools like bash scripting, R, and Docker and uses GitHub codespace as a platform to connect all together and create an environment for contributors to contribute to the R code base.
 
 #### Project Repository:
 https://github.com/r-devel/r-dev-env/
@@ -50,10 +50,10 @@ But for this project, I worked with complex bash scripting and got to know the p
 
 Never thought how many things we can automate using Github actions. After building Github actions for mkdocs build with guidance from James Tripp and slimtoolkit Github actions for building and optimizing docker image. This Learning will help me as an Emerging Devops Engineer.
 
-Moreover, I got to know about tools like 'hypothes' which can be useful for Open Source dev who works with documentation.
+Moreover, I got to know about tools like [hypothes.is](https://web.hypothes.is/) which can be useful for Open Source dev who works with documentation.
 
 ### Links to Work
 
-- R Development Environment - https://github.com/r-devel/r-dev-env/
+- [R Development Environment](https://github.com/r-devel/r-dev-env/)
 
-- Slimtoolkit Actions Workflow - https://github.com/StarTrooper08/SlimtoolkitActions
+- [Slimtoolkit Actions Workflow](https://github.com/StarTrooper08/SlimtoolkitActions)
