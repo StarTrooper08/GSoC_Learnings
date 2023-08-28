@@ -1,13 +1,13 @@
-## My Experience and Learnings from GSoC 2023(R Project For Statistical Computing)
+# My Experience and Learnings from GSoC 2023(R Project For Statistical Computing)
 ![R codespace](https://github.com/StarTrooper08/GSoC_Learnings/assets/72031540/8633588f-2cc5-4970-8790-572ab3ebc33e)
 
 ### How it started and got to know about the project I'm working on this GSoC'23
 
-I started learning Devops tools and was pretty much known to tools like Docker and Github Actions. One of my Best friends sent me the project description. After reading through the project description I found it was somewhere matching the skills I had and wanted to give it a try. I tried out the task listed below project idea on gsoc project idea page. And discussed the project with respective mentors and that is how it started all.
+I embarked on a journey to learn DevOps tools and already had a decent understanding of tools like Docker and GitHub Actions. It was during this time that one of my best friends shared a project description with me. Upon reviewing the project details, I noticed a strong alignment between the required skills and my existing capabilities, prompting me to consider taking on the challenge. To gauge my fit for the project, I tackled the tasks listed within the project idea on the GSoC project page. Subsequently, I engaged in discussions with the mentors associated with the project. This marked the inception of the journey that led me to where I am today.
 
 ### Project Info
 
-The project aims to create an environment for open source contributors to easily set up and install R devel source code and let them work on bugs/issues instead of getting tangled in the setup process. This environment is great for beginners who are getting started contributing to the R community. The project uses tools like bash scripting, R, and Docker and uses GitHub codespace as a platform to connect all together and create an environment for contributors to contribute to the R code base.
+The project's objective is to establish an environment tailored for open-source contributors, simplifying the process of configuring and installing R devel source code. This streamlined setup facilitates their engagement in addressing bugs and issues, alleviating the challenges typically associated with the initial setup. Notably beneficial for newcomers embarking on contributions to the R project, this environment harnesses tools such as bash scripting, R programming, and Docker. The integration of GitHub Codespaces serves as the cohesive platform, uniting these elements to provide contributors with a conducive space for actively participating in the enhancement of the R codebase.
 
 #### Project Repository:
 [Project- R-Dev-Env](https://github.com/r-devel/r-dev-env/)
@@ -23,7 +23,7 @@ Heather Turner and James Tripp
 
 **1. R Contribution Workflow**
 
-The main and important component was the R contribution workflow. And we were setting this up on codespace using docker and bash scripting. The normal R setup steps on the local machine for R studio were mentioned on the R documentation page but here we have performed these steps on Codespace which is a VSCode editor but on a browser so the process of R installation was a little bit different. It was quite challenging for me to try out the R installation process on codespace(VSCode) cause I've never worked around the R source code that much but both of my Mentors helped me here and we were able do the basic R setup on codespace after doing little bit changes in dockerfile and bash commands.
+The central part of our project was the R contribution workflow, a crucial component. We set this up in Codespaces using Docker and bash scripting. Normally, the steps to build R on a local Ubuntu machine were explained in the R Development Guide. However, in Codespaces, which is a browser-based version of VSCode, the process was a bit different due to its unique environment. For me, it was a challenge to adapt the R installation process to Codespaces because I hadn't worked extensively with R source code before. Thankfully, both of my mentors provided valuable assistance. Together, we managed to create a simple contributor workflow: building R, making small code changes, and seeing those changes in Codespaces. This required tweaking the dockerfile and using specific bash commands.
 
 **2. Changing the terminal path to use the custom-installed R version**
 
@@ -66,6 +66,7 @@ This process is done manually by users by following the steps given R dev env do
 
 
 **3. Mkdocs Github Actions**
+
 The Mkdocs is used to document the usage of R development Environment project. For that we wanted to automate the build and publish to github pages process. So we build the github actions workflow for this process.
 
 YML file Snippet for mkdocs Github Actions workflow
@@ -217,23 +218,51 @@ fi
 [PR for R term switch](https://github.com/r-devel/r-dev-env/pull/68)
 [PR for multiple R term switch](https://github.com/r-devel/r-dev-env/pull/73)
 
+**6. Slimtoolkit Github Actions**
+
+The slimtoolkit GitHub Actions workflow is designed to optimize Docker images using the slimtoolkit tool, subsequently publishing the optimized Docker image to DockerHub. Although the workflow functions as intended, there are ongoing challenges regarding image optimization. Notably, the slimtoolkit process occasionally removes essential packages and libraries that are crucial for the R development environment. The solution involves incorporating the appropriate library paths and subsequently attempting to optimize the Docker image.
+However,this task is on hold for next release.
+
+#### Repository for Slimtoolkit Actions :
+[Slimtoolkit Actions Workflow](https://github.com/StarTrooper08/SlimtoolkitActions)
+
+
+### Link to R Development Environment v0.1 Release :
+[R Development Environment v0.1 Release](https://github.com/r-devel/r-dev-env/releases/tag/v0.1)
+
+
 ### Future Goals
 
 The R development environment project is still in the development stage and a few things we are working on are solidifying the R terminal path switching, and polishing R dev env documentation. Optimizing the docker image to use locally will load the R development environment much more quickly than it is now. And also automating few task to make R build process easier.
 
-### What did I learn during this GSoC Period?
+### What did I learn during this GSoC Period? How was my Experience?
 
-During the GSoC period, I learned a lot of new things as a developer. The first thing I got used to was bash scripting earlier I use to know basic commands and bundle them inside the shell script file.
+During the GSoC period, I learned a lot of new things as a developer. The first thing I got used to was bash scripting; earlier, I used to know basic commands and bundled them inside shell script files.
 
-But for this project, I worked with complex bash scripting and got to know the possibilities it offers.
+However, for this project, I worked with complex bash scripting and got to know the multitude of possibilities it offers. I also wrote an R contribution workflow script under the guidance of my mentor, Heather Turner, which, in turn, helped me build the thought process to write bash scripts. I even learned new Linux commands that I had utilized in this project. I had never realized how many tasks could be automated using GitHub Actions and bash scripting. Building GitHub Actions for tasks such as mkdocs build under the guidance of my mentor, James Tripp, and creating slimtoolkit GitHub Actions for building and optimizing Docker images made me realize the efficiency that can be achieved using GitHub Actions as a developer. This learning will undoubtedly assist me in my journey as an emerging DevOps Engineer.
 
-Never thought how many things we can automate using Github actions. After building Github actions for mkdocs build with guidance from James Tripp and slimtoolkit Github actions for building and optimizing docker image. This Learning will help me as an Emerging Devops Engineer.
+Furthermore, I became acquainted with tools like [hypothes.is](https://web.hypothes.is/), which can be highly beneficial for open-source developers who work with documentation. I also utilized GitHub's Milestone feature, which I had heard of but never used before. Additionally, I explored the GitHub image registry, which allows us to publish Docker images similar to DockerHub. This experience provided me with a taste of open-source collaboration and enhanced my understanding of efficient development practices.
+I also had the opportunity to participate in the R Contribution Working Group, where I presented and discussed the R dev env project. This experience was incredibly valuable as I connected and engaged in conversations with fellow R contributors and community members. The chance to interact with other R enthusiasts provided me with invaluable insights and perspectives on R development Environment Project.
+I also received feedback from members of the R community who found the R Development Environment Project helpful. This positive response aligns with the intentions that both my mentors, Heather Turner and James Tripp, and I were striving for. The affirmation from fellow community members reinforces the value of our efforts and encourages us to continue contributing meaningfully to the R ecosystem.
 
-Moreover, I got to know about tools like [hypothes.is](https://web.hypothes.is/) which can be useful for Open Source dev who works with documentation.
+Summarizing what I've learned so far:
+- Bash scripting
+- New linux commands
+- Github Actions automation
+- Github Milestone
+- Github Image Regitry
+- Building Docs using Quarto and Mkdocs.
+- Using hypothes.is
+- Open Source Collaboration
 
+
+### Thanks
+
+I want to express my sincere gratitude for the incredible opportunity to be a part of Google Summer of Code 2023. Working under the guidance, my mentors Heather Turner and James Tripp, has been immensely valuable, and I'm thankful for your support and mentorship throughout the program. Being a GSoC participant has not only honed my technical skills but has also shown me the power of open-source collaboration. This experience has been truly transformative, and I'm excited to continue contributing to the community. Thank you once again for this amazing journey.
 
 ### Links to Work
 
 - [R Development Environment](https://github.com/r-devel/r-dev-env/)
-
 - [Slimtoolkit Actions Workflow](https://github.com/StarTrooper08/SlimtoolkitActions)
+
+
