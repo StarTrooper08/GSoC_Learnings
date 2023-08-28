@@ -112,7 +112,11 @@ jobs:
 
 **4. Building Multiple R version**
 
-The R Contribution 
+The R Development Environment let us install and build multiple R version. We have tested and documentated the installing and building multiple R versions with different name and it is based on the R contribution workflow setup
+You can find the docs for Building Multiple R version [here](https://contributor.r-project.org/r-dev-env/)
+
+###### PR related to this implementation :
+[PR for Buildomh Multiple R version](https://github.com/r-devel/r-dev-env/pull/74)
 
 **5. Switch between R terminal path**
 
