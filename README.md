@@ -116,7 +116,7 @@ The R Development Environment let us install and build multiple R version. We ha
 You can find the docs for Building Multiple R version [here](https://contributor.r-project.org/r-dev-env/)
 
 ###### PR related to this implementation :
-[PR for Buildomh Multiple R version](https://github.com/r-devel/r-dev-env/pull/74)
+[PR for Building Multiple R version](https://github.com/r-devel/r-dev-env/pull/74)
 
 **5. Switch between R terminal path**
 
