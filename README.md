@@ -10,10 +10,10 @@ I started learning Devops tools and was pretty much known to tools like Docker a
 The project aims to create an environment for open source contributors to easily set up and install R devel source code and let them work on bugs/issues instead of getting tangled in the setup process. This environment is great for beginners who are getting started contributing to the R community. The project uses tools like bash scripting, R, and Docker and uses GitHub codespace as a platform to connect all together and create an environment for contributors to contribute to the R code base.
 
 #### Project Repository:
-https://github.com/r-devel/r-dev-env/
+[Project- R-Dev-Env](https://github.com/r-devel/r-dev-env/)
 
 #### Documentation :
-https://contributor.r-project.org/r-dev-env/
+[Docs- R-Dev-Env](https://contributor.r-project.org/r-dev-env/)
 
 #### My Project Mentors :
 Heather Turner and James Tripp
@@ -21,26 +21,205 @@ Heather Turner and James Tripp
 
 ### Challenges
 
-1. R Contribution Workflow
+**1. R Contribution Workflow**
 
 The main and important component was the R contribution workflow. And we were setting this up on codespace using docker and bash scripting. The normal R setup steps on the local machine for R studio were mentioned on the R documentation page but here we have performed these steps on Codespace which is a VSCode editor but on a browser so the process of R installation was a little bit different. It was quite challenging for me to try out the R installation process on codespace(VSCode) cause I've never worked around the R source code that much but both of my Mentors helped me here and we were able do the basic R setup on codespace after doing little bit changes in dockerfile and bash commands.
 
-2. Changing the terminal path to use the custom-installed R version
+**2. Changing the terminal path to use the custom-installed R version**
 
 For this, we have to write a bash script that can switch between the default R version which is present in the Docker image and the custom R version one can build inside the codespace. At the start, we used the devcontainer.json file which is needed to build the R development environment inside codespace. But it was keeping the paths fixed and we were unable to switch between the default R version which we have inside the docker image and custom R which we can build inside the codespace.
 
 We then tried to manipulate the settings.json file which sets the R terminal paths using the Linux jq package which is used to do manipulation of JSON with bash script. And it worked for us!!!
 
-3. Optimizing the Docker Image.
+**3. Optimizing the Docker Image**
 
 The R development environment is based on Docker Image. For now, we are focused on using it with Github Codespace. Since it is based on docker, the image size is quite large and it takes time to build and load the codespace for the first time.
 But after building the docker image before then mentioning the docker image registry link inside the devcontainer.json it reduced the time to load the codespace and became quite fast.
 But one thing to note is that we can also run the R development environment locally using docker. But there it takes more time to load. To reduce the environment loading time, I thought to use slimtoolkit which is a docker image size-reducing tool and also a security check tool similar to docker scout.
 To reduce the docker image size, we have to figure out which Linux packages and tools we need to run the R development environment properly locally.
 
+### Implementations for R-Dev-Env v0.1 and upcoming v0.2 :
+**1. Added Path Env Var $BUILDDIR and $TOP_SRCDIR to Dockerfile**
+
+The env var is crucial implementation in r-dev-env project since these both path var help us source code and build version in 2 different directory.
+We first tried out adding these both env variable path inside the bash script and running the script when the codespace is created since these 2 variable needed to be present all the time. We mentioned them inside dockerfile.
+
+Dockerfile Snippet for env var 
+```Dockerfile
+ENV BUILDDIR='/workspaces/r-dev-env/build'
+ENV TOP_SRCDIR='/workspaces/r-dev-env/svn'
+```
+
+###### PR related to this implementation :
+[PR for Path Env Var](https://github.com/r-devel/r-dev-env/pull/11)
+[PR for Path Env Var update](https://github.com/r-devel/r-dev-env/pull/69)
+
+**2. R contribution Workflow**
+
+The R contribution Workflow is also one of the implementation needed to let users build R version on R dev env.
+One can install and build R version with or without recommended packages.
+This process is done manually by users by following the steps given R dev env docs. In further release, this thing can be automated.
+[Documentation](https://contributor.r-project.org/r-dev-env/tutorials/building_r/) to install and build R on R dev env
+
+###### PR related to this implementation :
+[R contribution workflow docs](https://github.com/r-devel/r-dev-env/pull/64/files)
+
+
+**3. Mkdocs Github Actions**
+The Mkdocs is used to document the usage of R development Environment project. For that we wanted to automate the build and publish to github pages process. So we build the github actions workflow for this process.
+
+YML file Snippet for mkdocs Github Actions workflow
+```YML
+name: Build MKDocs website
+
+on:
+  push:
+    branches: ["devel"]
+
+jobs:
+  build-and-deploy:
+    if: ${{ contains(github.event.head_commit.message, 'Build website') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x 
+
+      - name: Install dependencies
+        run: pip install mkdocs
+
+      - name: Build MkDocs
+        run: mkdocs build
+
+      - name: Deploy to GitHub Pages
+        run: |
+           mkdocs gh-deploy --force
+           git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+###### PR related to this implementation :
+[PR for the Mkdocs build and publish process GH Actions](https://github.com/r-devel/r-dev-env/pull/64)
+
+**4. Building Multiple R version**
+
+The R Contribution 
+
+**5. Switch between R terminal path**
+
+The R development environment comes with R v4.3.1 version by default bundled up. But the main motive of the R dev env project is to let user install and build any different R version and do the code contribution by fixing the bugs/issues.
+And one can install and build R version using the contribution workflow docs and multiple R build.
+But the issue here was switching R terminal path between the multiple R versions properly.
+To do so we need to manipulate the settings.json for R extension inside the codespace. In the beginning we directly updated the devcontainer.json and made the required changes but it used to update the path but doesn't use to switch back to default R version from the custom R build.
+So we written bash script to switch between default R version of R dev env and custom R build.
+
+Bash Script snippet 
+```bash
+#!/bin/bash
+
+# Path to the settings.json file
+settings_file_path="/home/vscode/.vscode-remote/data/Machine/settings.json"
+
+
+# Read the existing JSON content
+settings_data=$(cat "$settings_file_path")
+
+echo "Do you want to switch rterm path to custom R build / default R build? (type C or D)"
+read option
+
+if [ "$option" = "C" ]; then
+    updated_settings_data=$(echo "$settings_data" | jq '."r.rterm.linux"="/workspaces/r-dev-env/bin/R/bin/R"')
+elif [ "$option" = "D" ]; then
+    updated_settings_data=$(echo "$settings_data" | jq '."r.rterm.linux"="/usr/bin/R"')
+else
+    echo "Invalid option selected."
+    exit 1
+fi
+
+echo "$updated_settings_data" > "$settings_file_path"
+
+```
+
+The above script just let us switch between default R version and one specifed custom R build. So to switch between default and multiple R build version, we have written bash script to do so. Its currently in testing and will be released with v0.2 of R Development Environment.
+
+Multiple R terminal switch
+```bash
+#!/bin/bash
+
+# Specify the parent directory
+parent_dir="$BUILDDIR"
+
+# Path to the settings.json file
+settings_file_path="/home/vscode/.vscode-remote/data/Machine/settings.json"
+
+echo "Do you want to switch rterm path to custom R build / default R build? (type C or D)"
+read option
+
+if [ "$option" = "C" ]; then
+    # Check if the parent directory exists
+    if [ -d "$parent_dir" ]; then
+        echo "Subdirectories in $parent_dir:"
+        
+        # Create an array to store subdirectory names
+        subdirs=()
+        
+        # Loop through subdirectories and populate the array
+        for dir in "$parent_dir"/*; do
+            if [ -d "$dir" ]; then
+                subdir=$(basename "$dir")
+                subdirs+=("$subdir")
+                echo "${#subdirs[@]}. $subdir"
+            fi
+        done
+        
+        if [ "${#subdirs[@]}" -gt 0 ]; then
+            read -p "Enter the number of the subdirectory to switch to: " choice
+            
+            # Check if the choice is valid
+            if [ "$choice" -gt 0 ] && [ "$choice" -le "${#subdirs[@]}" ]; then
+                chosen_subdir="${subdirs[$((choice - 1))]}"
+                cd "$parent_dir/$chosen_subdir" || exit
+                echo "Switched to subdirectory: $chosen_subdir"
+                
+                # Update the settings.json with the chosen subdirectory path
+                updated_settings_data=$(cat "$settings_file_path" | jq --arg subdir "$parent_dir/$chosen_subdir/bin/R" '."r.rterm.linux"=$subdir')
+                echo "$updated_settings_data" > "$settings_file_path"
+                
+                # Start an interactive shell in the chosen subdirectory
+                bash
+            else
+                echo "Invalid choice."
+            fi
+        else
+            echo "No subdirectories found."
+        fi
+    else
+        echo "Parent directory does not exist."
+    fi
+elif [ "$option" = "D" ]; then
+    updated_settings_data=$(cat "$settings_file_path" | jq '."r.rterm.linux"="/usr/bin/R"')
+    echo "$updated_settings_data" > "$settings_file_path"
+else
+    echo "Invalid option selected."
+    exit 1
+fi
+```
+###### PR related to this implementation :
+
+[PR for R term switch](https://github.com/r-devel/r-dev-env/pull/68)
+[PR for multiple R term switch](https://github.com/r-devel/r-dev-env/pull/73)
+
 ### Future Goals
 
-The R development environment project is still in the development stage and a few things we are working on are solidifying the R terminal path switching, and polishing R dev env documentation. Optimizing the docker image to use locally will load the R development environment much more quickly than it is now.
+The R development environment project is still in the development stage and a few things we are working on are solidifying the R terminal path switching, and polishing R dev env documentation. Optimizing the docker image to use locally will load the R development environment much more quickly than it is now. And also automating few task to make R build process easier.
 
 ### What did I learn during this GSoC Period?
 
@@ -51,6 +230,7 @@ But for this project, I worked with complex bash scripting and got to know the p
 Never thought how many things we can automate using Github actions. After building Github actions for mkdocs build with guidance from James Tripp and slimtoolkit Github actions for building and optimizing docker image. This Learning will help me as an Emerging Devops Engineer.
 
 Moreover, I got to know about tools like [hypothes.is](https://web.hypothes.is/) which can be useful for Open Source dev who works with documentation.
+
 
 ### Links to Work
 
